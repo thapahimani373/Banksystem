@@ -1,0 +1,123 @@
+# Movie Tracker Program
+# Demonstrates modular design, user interaction, and principles like SRP, Encapsulation, DRY, and High Cohesion.
+
+# Initial tuple of unwatched movies
+unwatched_movies = (
+    "Inception", "Titanic", "Avatar", "Interstellar",
+    "The Matrix", "Jurassic Park", "Harry Potter"
+)
+
+def update_movies(unwatched_movies):
+    """
+    Adds three movies to the list:
+    - One at the beginning
+    - One replacing the middle
+    - One at the end
+
+    Single Responsibility Principle:
+    This function only updates the movie list — it doesn't handle user input or tracking. Encapsulation:
+    The movie data is handled inside this function and returned as a new tuple.
+    """
+    mov_list = list(unwatched_movies)  # Convert tuple to list for editing
+    mov_list.insert(0, "The Arrival")  # Add movie to the beginning
+    mov_list.append("Terminator")      # Add movie to the end
+    middle_index = len(mov_list) // 2
+    mov_list[middle_index] = "Bullet Train"  # Replace middle movie
+    updated_movies = tuple(mov_list)  # Convert back to tuple
+
+    print("\nUpdated movie list:")
+    for i, movie in enumerate(updated_movies, start=1):
+        print(f"{i}. {movie}")
+
+    return updated_movies
+
+def set_watched_movies(updated_movies):
+    """
+    Interactive interface to mark movies as watched.
+
+    SRP:
+    This function handles user interaction for marking movies as watched.
+    DRY:
+    Reuses the same logic for displaying and updating lists. High Cohesion:
+    All steps related to tracking watched movies are grouped here.
+    """
+    mov_list = list(updated_movies)  # Convert to list for editing
+    watched_movies = []
+
+    print("\n📽 Welcome to your movie tracker!")
+    print("Mark movies you've watched by entering their number.")
+    print("Type 'q' to quit when you're done.\n")
+
+    while True:
+        print("\ Available movies:")
+        for index, movie in enumerate(mov_list):
+            print(f"{index + 1}. {movie}")
+
+        choice = input("\nEnter the number of a movie you've watched (or 'q' to quit): ")
+
+        if choice.lower() == 'q':
+            break
+        elif choice.isdigit():
+            index_selection = int(choice) - 1
+            if 0 <= index_selection < len(mov_list):
+                get_movie = mov_list.pop(index_selection)
+                watched_movies.append(get_movie)
+                print(f" You marked '{get_movie}' as watched.")
+            else:
+                print("That number is not associated with a movie. Try again.")
+        else:
+            print("Invalid input. Please enter a number or 'q' to quit.")
+
+    print("\n Summary:")
+    print("Movies you've watched:", tuple(watched_movies))
+    print("Movies not yet watched:", tuple(mov_list))
+
+    # Optional save feature
+    save_choice = input("\nWould you like to save your watched movies to a file? (y/n): ")
+    if save_choice.lower() == 'y':
+        save_watched_movies(watched_movies)
+    else:
+        print("Watched movies not saved.")
+
+    # Replay option
+    replay = input("\nWould you like to restart and track again? (y/n): ")
+    if replay.lower() == 'y':
+        set_watched_movies(updated_movies)
+    else:
+        print("\n Thanks for using the movie tracker. Enjoy your films!")
+
+def save_watched_movies(watched_movies):
+    """
+    Simulates saving watched movies to a file.
+
+        SRP:
+    This function only handles saving — not tracking or displaying.
+        Encapsulation:
+    The save logic is kept inside this function and doesn't affect other parts.
+    """
+    print("\nSaving watched movies...")
+    for movie in watched_movies:
+        print(f"Saved: {movie}")
+    print("All watched movies saved successfully.")
+
+def show_stats(updated_movies):
+    """
+    Displays statistics about the movie list.
+
+    Information Expert:
+    This function has access to the movie list, so it's the best place to calculate stats.
+    SRP:
+    Only responsible for displaying stats — no editing or input.
+    """
+    print("\nMovie Stats:")
+    print(f"Total movies: {len(updated_movies)}")
+    print(f"First movie: {updated_movies[0]}")
+    print(f"Last movie: {updated_movies[-1]}")
+    print(f"Middle movie: {updated_movies[len(updated_movies)//2]}")
+
+# Main program flow
+# High Cohesion:
+# Each step is clearly defined and grouped in logical order.
+updated_movies = update_movies(unwatched_movies)
+show_stats(updated_movies)
+set_watched_movies(updated_movies)
