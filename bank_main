@@ -44,7 +44,7 @@ def set_watched_movies(updated_movies):
     mov_list = list(updated_movies)  # Convert to list for editing
     watched_movies = []
 
-    print("\n📽 Welcome to your movie tracker!")
+    print("\n Welcome to your movie tracker!")
     print("Mark movies you've watched by entering their number.")
     print("Type 'q' to quit when you're done.\n")
 
